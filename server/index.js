@@ -54,6 +54,11 @@ mongoose
   .catch((err) => console.error("Failed to connect to MongoDB:", err));
 
 app.get("/profile", (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*")
+res.setHeader("Access-Control-Allow-Credentials", "true");
+res.setHeader("Access-Control-Max-Age", "1800");
+res.setHeader("Access-Control-Allow-Headers", "content-type");
+res.setHeader( "Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, PATCH, OPTIONS" );
   const token = req.cookies?.token;
   if (token) {
     jwt.verify(token, jwtSecret, (err, userData) => {
@@ -70,6 +75,11 @@ app.get("/profile", (req, res) => {
 });
 
 app.get("/messages/:userId", async (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*")
+res.setHeader("Access-Control-Allow-Credentials", "true");
+res.setHeader("Access-Control-Max-Age", "1800");
+res.setHeader("Access-Control-Allow-Headers", "content-type");
+res.setHeader( "Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, PATCH, OPTIONS" );
   try {
     const { userId } = req.params;
     const userData = await getUserDataFromReq(req);
@@ -90,6 +100,11 @@ app.get("/messages/:userId", async (req, res) => {
 });
 
 app.get("/people", async (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*")
+res.setHeader("Access-Control-Allow-Credentials", "true");
+res.setHeader("Access-Control-Max-Age", "1800");
+res.setHeader("Access-Control-Allow-Headers", "content-type");
+res.setHeader( "Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, PATCH, OPTIONS" );
   const users = await User.find({}, { _id: 1, username: 1 });
   res.json(users);
 });
