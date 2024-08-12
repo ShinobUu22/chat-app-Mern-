@@ -28,7 +28,7 @@ app.use('/uploads', express.static(__dirname +'/uploads'))
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://chat-app-mern-frontend-gt8r.onrender.com",
     credentials: true,
     optionsSuccessStatus: 200,
   })
@@ -181,7 +181,7 @@ app.post("/logout", (req, res) => {
 const port = process.env.PORT || 5000
 
 const server = app.listen(port, () => {
-  console.log("Server is running on http://localhost:5000");
+  console.log("Server is running");
 });
 
 const wss = new ws.WebSocketServer({ server });
