@@ -24,7 +24,8 @@ const Chat = () => {
   }, []);
 
   function connWs() {
-    const ws = new WebSocket("ws://localhost:5000");
+    // Update this URL to match your production backend's WebSocket URL
+    const ws = new WebSocket("wss://chat-app-backend-i0bz.onrender.com");
 
     ws.onopen = () => {
       console.log("WebSocket connection established");
@@ -112,22 +113,24 @@ const Chat = () => {
   }, [msgs]);
 
   useEffect(() => {
-    axios.get("/people").then((res) => {
-      const offPeepsArr = res.data
-        .filter((p) => p.id !== id)
-        .filter((p) => !Object.keys(onPeeps).includes(p._id));
-      const offPeepss = {};
-      offPeepsArr.forEach((p) => {
-        offPeepss[p._id] = p;
+    axios
+      .get("/people", { withCredentials: true })
+      .then((res) => {
+        const offPeepsArr = res.data
+          .filter((p) => p.id !== id)
+          .filter((p) => !Object.keys(onPeeps).includes(p._id));
+        const offPeepss = {};
+        offPeepsArr.forEach((p) => {
+          offPeepss[p._id] = p;
+        });
+        setOffPeeps(offPeepss);
       });
-      setOffPeeps(offPeepss);
-    });
   }, [id, onPeeps]);
 
   useEffect(() => {
     if (selectedUser) {
       axios
-        .get(`messages/${selectedUser}`)
+        .get(`/messages/${selectedUser}`, { withCredentials: true })
         .then((res) => {
           setMsgs(res.data);
         })
@@ -141,7 +144,7 @@ const Chat = () => {
   delete excludeYou[id];
 
   function logoutfxn() {
-    axios.post(`/logout`).then(() => {
+    axios.post(`/logout`, {}, { withCredentials: true }).then(() => {
       setId(null);
       setUsername(null);
     });
@@ -200,7 +203,7 @@ const Chat = () => {
         {!!selectedUser && (
           <div className=" h-full relative">
             <div className="w-full h-6"></div>
-            <div className="px-3 overflow-y-scroll absolute tpo-0 left-0 right-0 bottom-2 h-full">
+            <div className="px-3 overflow-y-scroll absolute top-0 left-0 right-0 bottom-2 h-full">
               <div className="w-full h-12 border"></div>
               {msgs.map((msg) => (
                 <div className="flex" key={msg.id}>
@@ -216,14 +219,14 @@ const Chat = () => {
                   >
                     {msg.text}
                     {msg.file && (
-                      <div className="flex items-center gap-2 ">
+                      <div className="flex items-center gap-2">
                         <a
                           target="_blank"
                           href={`${axios.defaults.baseURL}/uploads/${msg.file}`}
                           download
                           className="border-b flex"
                         >
-                        <RiAttachment2 size={15} />
+                          <RiAttachment2 size={15} />
                           {msg.file.name}
                         </a>
                       </div>
