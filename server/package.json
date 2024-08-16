@@ -5,8 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js",
-    "proxy": "https://chat-app-mern-frontend-gt8r.onrender.com"
+    "start": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
