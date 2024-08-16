@@ -9,9 +9,8 @@ import cookieParser from "cookie-parser";
 import bcrypt from "bcryptjs";
 import * as ws from "ws";
 import * as fs from "fs";
-import path from 'path';
-import { fileURLToPath } from 'url';
-
+import path from "path";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,7 +23,7 @@ const bcryptSalt = bcrypt.genSaltSync(10);
 
 app.use(express.json());
 app.use(cookieParser());
-app.use('/uploads', express.static(__dirname +'/uploads'))
+app.use("/uploads", express.static(__dirname + "/uploads"));
 
 app.use(
   cors({
@@ -61,7 +60,7 @@ app.get("/profile", (req, res) => {
         console.error("JWT verification error:", err);
         return res.status(403).json({ error: "Token verification failed" });
       }
-     
+
       res.json({ id: userData.userId, username: userData.username });
     });
   } else {
@@ -178,7 +177,7 @@ app.post("/logout", (req, res) => {
     .json("ok");
 });
 
-const port = process.env.PORT || 5000
+const port = 5000;
 
 const server = app.listen(port, () => {
   console.log("Server is running on http://localhost:5000");
@@ -213,12 +212,12 @@ wss.on("connection", (conn, req) => {
     const msgData = JSON.parse(msg.toString());
 
     const { receiver, text, file } = msgData;
-    let filename = null
-    
+    let filename = null;
+
     if (file) {
       const parts = file.name.split(".");
       const ext = parts[parts.length - 1];
-       filename = Date.now() + "." + ext;
+      filename = Date.now() + "." + ext;
       const filePath = path.join(__dirname, "/uploads/", filename);
       const bufferData = Buffer.from(file.data, "base64");
       fs.writeFile(filePath, bufferData, () => {
@@ -230,7 +229,7 @@ wss.on("connection", (conn, req) => {
         sender: conn.userId,
         receiver,
         text,
-        file:file? filename : null,
+        file: file ? filename : null,
       });
 
       [...wss.clients]

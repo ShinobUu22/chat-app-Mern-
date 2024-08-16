@@ -48,7 +48,7 @@ const Chat = () => {
   function showOnline(peepsArr) {
     const peeps = {};
     peepsArr.forEach(({ userId, username }) => {
-      if (userId) peeps[userId] = username;
+      if (userId && userId !== id) peeps[userId] = username; // Filter out yourself
     });
     setOnPeeps(peeps);
   }
@@ -94,7 +94,7 @@ const Chat = () => {
       reader.readAsDataURL(file);
       reader.onload = () => {
         const result = reader.result;
-        const base64Data = result.split(",")[1]; // Strip the data URL prefix
+        const base64Data = result.split(",")[1];
         const fileData = {
           name: file.name,
           data: base64Data,
@@ -114,7 +114,7 @@ const Chat = () => {
   useEffect(() => {
     axios.get("/people").then((res) => {
       const offPeepsArr = res.data
-        .filter((p) => p.id !== id)
+        .filter((p) => p._id !== id) // Filter out yourself
         .filter((p) => !Object.keys(onPeeps).includes(p._id));
       const offPeepss = {};
       offPeepsArr.forEach((p) => {
@@ -152,7 +152,6 @@ const Chat = () => {
       <div className="bg-purple-50 w-1/3 flex flex-col">
         <div className="flex-grow">
           <ChatApp />
-          {console.log(onPeeps)}
           {Object.keys(excludeYou).map(
             (p) =>
               onPeeps[p] && (
@@ -223,7 +222,7 @@ const Chat = () => {
                           download
                           className="border-b flex"
                         >
-                        <RiAttachment2 size={15} />
+                          <RiAttachment2 size={15} />
                           {msg.file.name}
                         </a>
                       </div>
@@ -256,18 +255,14 @@ const Chat = () => {
                 placeholder="Write your messages here..."
               />
               <label className="bg-slate-300 rounded-3xl text-center p-2 text-white right-1 mr-2 border border-slate-400 cursor-pointer">
-                <input
-                  type="file"
-                  className="hidden"
-                  onChange={(e) => sendFile(e)}
-                />
-                <RiAttachment2 size={30} />
+                <input type="file" className="hidden" onChange={sendFile} />
+                <RiAttachment2 />
               </label>
               <button
-                className="bg-blue-500 rounded-3xl text-center p-2 text-white right-1"
                 type="submit"
+                className="bg-sky-500 rounded-3xl text-center p-2 text-white right-1"
               >
-                <IoSendOutline size={30} />
+                <IoSendOutline size={20} />
               </button>
             </div>
           </form>
