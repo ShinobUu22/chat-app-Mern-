@@ -24,7 +24,7 @@ const Chat = () => {
   }, []);
 
   function connWs() {
-    const ws = new WebSocket("ws://chat-app-mern-1-94jg.onrender.com");
+    const ws = new WebSocket("wss://chat-app-mern-1-94jg.onrender.com");
 
     ws.onopen = () => {
       console.log("WebSocket connection established");
